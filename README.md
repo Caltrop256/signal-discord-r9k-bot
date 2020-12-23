@@ -32,9 +32,10 @@ conversation, without the need for excessive moderator intervention.
 
 ### Implementation-Details
 Since there are no official specifications for how an R9K moderation system should operate and due to some of Discord's own quirks
-this R9K implementation might differ from others. Below 
+this R9K implementation might differ from others. You will find a description about how the bot behaves below:
 
 #### Text
+Anything that isn't an attachment, an embed, or a system message is considered text.
 
 ##### Regular-Text
 The bot only tries to compare the most important aspect of the text content, which is why it completely ignores 
