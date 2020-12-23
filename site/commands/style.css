@@ -44,6 +44,22 @@ article p {
     margin-top: 0px;
 }
 
+article .perms {
+    font-size: 1em;
+    margin-top: 0.3em;
+    color: #315FA7;
+}
+
+article .perms::before {
+    content: 'requires: ';
+    color: #FDFDFD;
+}
+
+article .perms::after {
+    content: ' permissions!';
+    color: #FDFDFD;
+}
+
 .command {
     position: relative;
     border-top: 2px solid white;
@@ -126,4 +142,11 @@ a:hover {
     color: #72767d;
     line-height: 1.375rem;
     font-family: Whitney, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

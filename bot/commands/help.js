@@ -5,7 +5,7 @@ module.exports = {
     perms: [],
 
     run: function(handler, msg, args, output) {
-        const embed = client.embed.info(`You can find a detailawdeasdawadawsdaw`, 'Help');
+        const embed = client.embed.info(`You can find a more detailed list of commands [here](https://caltrop.dev/signal/commands).`, 'Help');
         embed.addField('List of commands', client.commands.filter(c => !c.perms.includes('DEV')).map(c => `${client.guildInfo[msg.channel.guild.id].settings.prefix}**${c.name}** ${c.args}`).join('\n'), false);
         output.send(embed);
     }

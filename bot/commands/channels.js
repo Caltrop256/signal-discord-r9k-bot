@@ -4,12 +4,11 @@ module.exports = {
     args: '[add|remove] [channel]',
     perms: ['MANAGE_GUILD'],
 
-
     run: async function(handler, msg, args, output) {
         const guild = msg.channel.guild;
 
         if(!args.length) {
-            output.send(client.embed.info(client.misc.endListWithAnd(Array.from(client.guildInfo[msg.channel.guild.id].channels).map(c => '<#' + c + '>')), 'List of Channels'));
+            output.send(client.embed.info(client.misc.endListWithAnd(Array.from(client.guildInfo[msg.channel.guild.id].channels).map(c => '<#' + c + '>')) || 'No channels added yet!\n\nUse **' + client.guildInfo[msg.channel.guild.id].settings.prefix + 'channel add <channel>** to start adding channels to the list!', 'List of Channels'));
         } else if(args.length >= 2) {
             if(!client.misc.getPerms(msg.member).includes('MANAGE_GUILD')) return output.send(client.embed.invalid('You are missing the **manage guild** permission!\n\nConsider asking a Moderator for help.', 'Missing Permissions'));
             const str = args.join(' ').substring((args[0].length)).trim();

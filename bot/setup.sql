@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS `messageData` (
-	`content` VARCHAR(2000) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL
+    `content` VARCHAR(2000) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `attributeData` (
-	`hash` CHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `hash` CHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`hash`)
 );
 
 CREATE TABLE IF NOT EXISTS `settings` (
-	`guildId` VARCHAR(20) NOT NULL,
+    `guildId` VARCHAR(20) NOT NULL,
     `muteOnViolation` BOOLEAN NOT NULL DEFAULT 1,
     `muteDecayTime` FLOAT NOT NULL DEFAULT 6.0,
     `prefix` VARCHAR(3) CHARACTER SET utf16 COLLATE utf16_unicode_ci NOT NULL DEFAULT '&',
@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS `settings` (
 );
 
 CREATE TABLE IF NOT EXISTS `mutes` (
-	`guildId` VARCHAR(20) NOT NULL,
+    `guildId` VARCHAR(20) NOT NULL,
     `userId` VARCHAR(20) NOT NULL,
-	`start` TIMESTAMP DEFAULT NULL,
+    `start` TIMESTAMP DEFAULT NULL,
     `lastUpdate` TIMESTAMP NOT NULL,
     `time` INT UNSIGNED DEFAULT NULL,
     `streak` TINYINT UNSIGNED DEFAULT 0, 
@@ -37,18 +37,18 @@ CREATE PROCEDURE selectAndUpdate(
 )
 BEGIN
     IF EXISTS(SELECT * FROM `messageData` WHERE `content` = messageData LIMIT 1) THEN
-		SET @selQueryString = CONCAT("SELECT `", id, "` FROM `messageData` WHERE `content` = ? LIMIT 1");
-		SET @messageData = messageData;
-		PREPARE selectStatement FROM @selQueryString;
-		EXECUTE selectStatement USING @messageData;
-		DEALLOCATE PREPARE selectStatement;
-		SET @updQueryString = CONCAT("UPDATE `messageData` SET `", id, "` = 1 WHERE `content` = ?");
-		PREPARE updateStatement FROM @updQueryString;
-		EXECUTE updateStatement USING @messageData;  
-		DEALLOCATE PREPARE updateStatement ;
+        SET @selQueryString = CONCAT("SELECT `", id, "` FROM `messageData` WHERE `content` = ? LIMIT 1");
+        SET @messageData = messageData;
+        PREPARE selectStatement FROM @selQueryString;
+        EXECUTE selectStatement USING @messageData;
+        DEALLOCATE PREPARE selectStatement;
+        SET @updQueryString = CONCAT("UPDATE `messageData` SET `", id, "` = 1 WHERE `content` = ?");
+        PREPARE updateStatement FROM @updQueryString;
+        EXECUTE updateStatement USING @messageData;  
+        DEALLOCATE PREPARE updateStatement ;
     ELSE
         SET @insQueryString = CONCAT("INSERT INTO `messageData` (`content`,`", id,"`) VALUES (?,1)");
-		SET @messageData = messageData;
+        SET @messageData = messageData;
         PREPARE insertStatement FROM @insQueryString;
         EXECUTE insertStatement  USING @messageData;
         DEALLOCATE PREPARE insertStatement;

@@ -71,20 +71,25 @@ class R9K extends global.Discord.Client {
             ])).map(r => r[0]);
 
             for(let i = 0; i < chRows.length; ++i) {
-                this.guildInfo[chRows[i].guildId].channels.add(chRows[i].channelId);
+                const entry = this.guildInfo[chRows[i].guildId];
+                if(entry) entry.channels.add(chRows[i].channelId);
             };
             for(let i = 0; i < mutes.length; ++i) {
+                const entry = this.guildInfo[mutes[i].guildId];
+                if(!entry) continue;
                 const mute = Object.assign({}, mutes[i]);
                 delete mute.guildId;
                 delete mute.userId;
                 mute.start = Number(mute.start);
                 mute.lastUpdate = Number(mute.lastUpdate);
-                this.guildInfo[mutes[i].guildId].mutes[mutes[i].userId] = mute;
+                entry.mutes[mutes[i].userId] = mute;
             }
             for(let i = 0; i < settings.length; ++i) {
+                const entry = this.guildInfo[settings[i].guildId];
+                if(!entry) continue;
                 const sets = Object.assign({}, settings[i]);
                 delete sets.guildId;
-                this.guildInfo[settings[i].guildId].settings = sets;
+                entry.settings = sets;
             };
             Promise.all(promises).then(console.log.bind(null, "r9k online!"));
 

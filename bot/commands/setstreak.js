@@ -3,7 +3,7 @@ module.exports = {
     aliases: ['changestreak', 'setnonce', 'changenonce'],
     args: '<number> [user]',
     rate: 5,
-    perms: ['MANAGE_GUILD'],
+    perms: ['MANAGE_MESSAGES'],
 
     run: async function(handler, msg, args, output) {
         const gid = msg.channel.guild.id;

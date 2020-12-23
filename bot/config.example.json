@@ -1,0 +1,21 @@
+{
+    "token": "bot token here",
+
+    "mySQL": {
+        "host": "localhost",
+        "user": "",
+        "password": "",
+        "database": "r9k",
+        "connectionLimit": 8
+    },
+
+    "defaultSettings": {
+        "muteOnViolation": true,
+        "muteDecayTime": 6.0,
+        "prefix": "&"
+    },
+
+    "developers": [
+        "user ids here"
+    ]
+}

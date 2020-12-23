@@ -2,7 +2,7 @@ module.exports = {
     name: 'mute',
     aliases: ['warn', 'addviolation', 'addv'],
     args: '<user>',
-    perms: ['MANAGE_GUILD'],
+    perms: ['MANAGE_MESSAGES'],
 
     run: async function(handler, msg, args, output) {
         if(!args.length) return output.send(client.embed.invalid('Please provide a user to mute!', 'Invalid arguments', this, msg.channel.guild.id));

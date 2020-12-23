@@ -18,7 +18,8 @@ module.exports = {
 
             for(let i = 0; i < channels.length; ++i) {
                 if(isValid(channels[i])) {
-                    channels[i].send('hey');
+                    const embed = client.embed.info('Thank you for adding me to your Guild!\nUse the **&channels** commands to start adding channels to the network! You can find a complete list of commands and further information [here](https://caltrop.dev/signal)!','Signal has been added to your Guild!')
+                    channels[i].send(embed);
                     break;
                 }
             }

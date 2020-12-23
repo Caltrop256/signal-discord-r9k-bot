@@ -9,7 +9,7 @@ module.exports = {
     aliases: ['sets', 'perferences', 'prefs', 'options', 'opts'],
     args: '[setting] [value]',
     rate: 5,
-    perms: [],
+    perms: ['MANAGE_GUILD'],
 
     run: async function(handler, msg, args, output) {
         const gid = msg.channel.guild.id,

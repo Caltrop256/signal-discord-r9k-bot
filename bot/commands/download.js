@@ -5,7 +5,7 @@ module.exports = {
     aliases: ['dl', 'backup'],
     args: '',
     rate: 20,
-    perms: ['MANAGE_GUILD'],
+    perms: ['MANAGE_MESSAGES'],
 
     run: function(handler, msg, args, output) {
         client.sql('SELECT `content` FROM `messageData` WHERE `'+msg.channel.guild.id+'`=1; SELECT `hash` FROM `attributeData` WHERE `'+msg.channel.guild.id+'`=1;')
