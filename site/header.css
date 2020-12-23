@@ -1,0 +1,83 @@
+header {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    left: 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 0.67em;
+    background-color: #131D26;
+    height: 3em;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    border-bottom: 2px solid #212732;
+    z-index: 999;
+}
+
+header .logo {
+    padding-right: 1em;
+    border-right: 3px solid #FDFDFD;
+    height: 3em;
+    cursor: pointer;
+}
+
+header .logo b {
+    font-family: 'ISO Bold';
+    position: relative;
+    top: -1em;
+    font-size: 3em;
+    line-height: 3em;
+    letter-spacing: 0.4ch;
+    color: #FDFDFD;
+}
+
+header a {
+    color: #FDFDFD;
+    text-decoration: none;
+    font-size: 2em;
+    margin-left: 1em;
+}
+
+header a:hover {
+    color: #da3a2d;
+    text-decoration: underline;
+}
+
+header a:last-of-type {
+    color: #da3a2d;
+    position: absolute;
+    right: 0px;
+    margin-right: 0.67em;
+    border: 3px solid #da3a2d;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    border-radius: 10px;
+}
+
+header a:last-of-type:hover {
+    color: #FDFDFD;
+    text-decoration: none;
+    background-color: #da3a2d;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #212732;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: #212732;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #43464A;
+}

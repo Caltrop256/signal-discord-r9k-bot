@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <title>Signal - R9K Discord Bot</title>
+</head>
+<body>
+    <header class="unselectable">
+        <div class="logo unselectable">
+            <b>SIGNAL</b>
+        </div>
+        <a href="https://github.com">Source</a>
+        <a href="./commands">Commands</a>
+        <a href="#">Invite to Server</a>
+    </header>
+    <article class="unselectable">
+        <h1>Signal</h1>
+        <h2>An Easy to use R9K Bot</h2>
+        <p>R9K (short for <i>Robot 9000</i>) is an experimental mode of moderation inspired by <a href="https://blog.xkcd.com/2008/01/14/robot9000-and-xkcd-signal-attacking-noise-in-chat/">XKCD</a>.</p>
+        <p>
+            The bot attempts to improve a channel's <em>signal</em>-to-noise ratio by requiring all messages to be unique.
+            Every time a message is sent into the selected channel the bot will compare it to all previously sent messages, 
+            if it's deemed too similar the message will be deleted. If the user keeps sending unoriginal messages they will 
+            be temporarily muted based on the number of infractions.
+        </p>
+        <p>
+            This system will promote slower but more thought-out conversation amongst members. Shortly after all the filler
+            messages have been used up members will have to resort back to having more verbose yet constructive conversations with each other.
+            The channels in which early prototypes of this bot were tested quickly became favourites amongst the userbase for
+            offering both consistently solid discussion and enjoyable casual conversation.
+        </p>
+        <p class="quote">How does the bot deal with people trying to circumvent the filter?</p>
+        <p>
+            As you can imagine there are a lot of ways to bypass the filter, and while the bot tries to account
+            for the most basic tactics it wont catch everyone. This is why it has an inbuilt <a href="./commands/#mute">mute command</a>,
+            which the moderators of your server can use to punish members which aren't participating in the spirit of R9K.
+        </p>
+        <p class="quote">Won't the bot get in the way of quality conversation?</p>
+        <p>
+            Surprisingly, no, it rarely does. The amount of possible messages grows super-expontentially with the length of the message, just 
+            using latin characters a 10 character long message will have <code>4032914611266056355840000000</code> possible combinations! For common
+            parts of conversations such as <q>yeah</q> you will have to simply elaborate on what you agree with and why.
+        </p>
+        <p class="quote">What about images, embeds, emojis, etc?</p>
+        <p>
+            While the bot is mainly designed to handle text, it also deals with images, embeds, emojis, and more just fine.
+            Duplicated image posts will be detected just as well as duplicated messages. You can read more in the <a href="">implementation details</a>.
+        </p>
+    </article>
+</body>
+</html>

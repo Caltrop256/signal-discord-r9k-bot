@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'ISO Regular';
+    src: local('ISO v0.5'),
+        url('./assets/ISOv0.5-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ISO Bold';
+    src: local('ISO v0.5'),
+        url('./assets/ISOv0.5-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+html {
+    background-color: #151515;
+    font-family: 'ISO Regular';
+    font-weight: 100;
+}
+
+body {
+    margin: 0;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+article {
+    margin-top: 10em;
+    width: min(120ch, 70%);
+    padding-left: 20%;
+    color: #FDFDFD;
+    font-family: 'ISO Regular';
+}
+
+article h1 {
+    text-decoration: underline;
+    font-family: 'ISO Bold';
+    font-size: 5em;
+    margin-bottom: 0px;
+}
+
+article h2 {
+    font-family: 'ISO Bold';
+    font-size: 3.5em;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+article h1:hover,
+article h2:hover {
+    color: #da3a2d;
+}
+
+article h3 {
+    font-family: 'ISO Regular';
+    color: #da3a2d;
+    font-size: 2em;
+    margin-top: 0px;
+}
+
+article p {
+    font-size: 1.3em;
+}
+
+article a {
+    color: #da3a2d;
+    text-decoration: none;
+}
+
+article a:hover {
+    text-decoration: underline;
+}
+
+article .quote {
+    padding-left: 10px;
+    font-family: 'ISO Regular';
+    font-size: 1.3em;
+    color: #FDFDFD;
+    border-left: 3px solid #da3a2d;
+}
+
+article .quote::before {
+    content: 'Q: ';
+    font-size: 1.4em;
+    color: #da3a2d;
+}
