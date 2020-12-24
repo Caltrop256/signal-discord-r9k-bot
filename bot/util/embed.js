@@ -1,4 +1,5 @@
 module.exports = {
+    name: 'embed',
     _base: function() {
         return new global.Discord.MessageEmbed().setFooter('caltrop.dev/signal').setColor(0x2178DA).setTimestamp().setThumbnail('attachment://thumbnail.png');
     },

@@ -1,6 +1,7 @@
 const {matchSorter} = require('match-sorter');
 
 module.exports = {
+    name: 'get',
     channel(str) {
         return new Promise(async r => {
             if (!str || typeof str != 'string') r(undefined);

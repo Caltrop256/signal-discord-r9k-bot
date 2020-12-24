@@ -20,8 +20,7 @@ module.exports = {
         .then(() => {
             client.mute.unmuteNotification(member.id, msg.channel.guild.id);
         }).catch(handler);
-        client.sql('UPDATE `mutes` SET `start`=?,`lastUpdate`=?,`time`=?,`streak`='+entry.streak+' WHERE `userId`="'+member.id+'" AND `guildId`="'+msg.channel.guild.id+'";', [null, new Date(entry.lastUpdate), null, entry.streak])
-        .then(() => {
+        client.sql.updateMuteEntry(msg.channel.guild.id, member.id, null, entry.lastUpdate, entry.streak, null).then(() => {
             output.send(client.embed.success(`Successfully unmuted ${member}!`, 'Unmuted Member'));
         }).catch(handler);
     }

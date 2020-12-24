@@ -28,8 +28,7 @@ module.exports = {
             streak: num,
             time: null
         });
-        client.sql('INSERT INTO `mutes` (`guildId`, `userId`, `start`, `lastUpdate`, `time`, `streak`) VALUES ("'+gid+'", "'+member.id+'", ?, ?, '+entry.time+', '+entry.streak+') ON DUPLICATE KEY UPDATE `start` = ?, `lastUpdate` = ?, `time` = '+entry.time+', `streak` = '+entry.streak+';', [entry.start, entry.lastUpdate, entry.start, entry.lastUpdate].map(d => d ? new Date(d) : null))
-        .then(() => {
+        client.sql.updateMuteEntry(gid, member.id, entry.start, entry.lastUpdate, entry.streak, entry.time).then(() => {
             output.send(client.embed.success(`Set ${member}'s streak to **${num}**!\n\nTheir next mute will be **${client.time(Math.min(Math.pow(2, num + 1) * 1000, client.mute.MAX_MUTE_TIME))} long**!`, 'Streak Updated'));
         })
         .catch(handler);

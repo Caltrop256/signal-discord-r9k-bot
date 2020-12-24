@@ -8,8 +8,7 @@ module.exports = {
     perms: ['MANAGE_MESSAGES'],
 
     run: function(handler, msg, args, output) {
-        client.sql('SELECT `content` FROM `messageData` WHERE `'+msg.channel.guild.id+'`=1; SELECT `hash` FROM `attributeData` WHERE `'+msg.channel.guild.id+'`=1;')
-        .then(([queryResults]) => {
+        client.sql.selectGuildMessageData(msg.channel.guild.id).then(([queryResults]) => {
             const msgData = queryResults[0].map(o => o.content),
                 attrData = queryResults[1].map(o => o.hash),
                 now = Date.now();

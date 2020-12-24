@@ -32,7 +32,7 @@ conversation, without the need for excessive moderator intervention.
 
 ### Implementation-Details
 Since there are no official specifications for how an R9K moderation system should operate and due to some of Discord's own quirks
-this R9K implementation might differ from others. You will find a description about how the bot behaves below:
+this R9K implementation might differ from others. You will find a description of how the bot behaves below:
 
 #### Text
 Anything that isn't an attachment, an embed, or a system message is considered text.
@@ -66,10 +66,10 @@ considers metadata and not the actual contents of a file. This is done to preser
 100 megabytes in size, downloading every single file would seriously weigh down on the performance of the bot.
 
 #### Embeds
-Embeds are special messages which only bots and modified-clients are able to send, to insure compatibilities with other bots these are taken into account as well.
+Embeds are special messages which only bots and modified-clients are able to send, to ensure compatibilities with other bots these are taken into account as well.
 
 #### Mixed-Content
-A message can consist of multiple of the above elements at once, for example a message containing both text and an image-attachment. In these cases the bot will check if either of the two is unique, the message only gets flagged as a violation if **all** elements in it are a repetition of previous content.
+A message can consist of multiple of the above elements at once, for example, a message containing both text and an image-attachment. In these cases the bot will check if either of the two is unique, the message only gets flagged as a violation if **all** elements in it are a repetition of previous content.
 
 The following table visualizes in which cases a message would get deleted:
 

@@ -9,7 +9,7 @@ module.exports = {
         const content = args.join(' ');
         if(!content.length) return output.send(client.embed.invalid('Please include a phrase to check!', 'Missing arguments!', this, msg.channel.guild.id));
         const compressed = await client.compressData(content);
-        client.sql('SELECT * FROM `messageData` WHERE `content`=? LIMIT 1;', [compressed]).then(([rows]) => {
+        client.sql.selectWhere('messageData', 'content', compressed, '*', 1).then(([rows]) => {
             const row = rows[0] || {};
             let saidIn = 0,
                 saidHere = false;

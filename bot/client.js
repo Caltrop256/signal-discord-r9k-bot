@@ -1,15 +1,7 @@
 const fs = require('fs'),
     config = require('./config.json'),
     crypto = require('crypto'),
-    LZUTF8 = require('lzutf8'),
-    mute = require('./util/mute.js'),
-    get = require('./util/get.js'),
-    embed = require('./util/embed.js'),
-    misc = require('./util/misc.js'),
-    error = require('./util/error.js'),
-    mySQL = require('mysql');
-
-const connection = mySQL.createPool(Object.assign({multipleStatements: true}, config.mySQL));
+    LZUTF8 = require('lzutf8');
 
 const defaultSettings = config.defaultSettings;
 
@@ -28,23 +20,17 @@ class R9K extends global.Discord.Client {
             'yellow'
         ].map(a => new Discord.MessageAttachment(fs.readFileSync('./assets/signal_' + a + '.png'), 'thumbnail.png'));
 
-        this.guildInfo = {};
-
-        this.mute = mute;
-        this.get = get;
-        this.embed = embed;
-        this.misc = misc;
-        this.error = error;
+        this.guildInfo = Object.create(null);
 
         this.developers = config.developers;
 
         this.commands = new global.Discord.Collection();
-
-        this.muteCheckInterval = setInterval(this.mute._loop.bind(this.mute), 2000);
+        this.eventFunctions = new Map();
 
         super.login(config.token);
         this.once('ready', async () => {
-            const storedGuilds = (await this.sql('DESCRIBE `messageData`'))[0].map(r => r.Field);
+            await this.loadModules().catch(console.error);
+            const storedGuilds = (await this.sql.describe('messageData'))[0].map(r => r.Field);
             storedGuilds.shift();
 
             const promises = [
@@ -65,9 +51,9 @@ class R9K extends global.Discord.Client {
             });
 
             const [chRows, mutes, settings] = (await Promise.all([
-                client.sql('SELECT * FROM `channels`;'),
-                client.sql('SELECT * FROM `mutes`;'),
-                client.sql('SELECT * FROM `settings`;')
+                client.sql.select('channels'),
+                client.sql.select('mutes'),
+                client.sql.select('settings')
             ])).map(r => r[0]);
 
             for(let i = 0; i < chRows.length; ++i) {
@@ -91,8 +77,8 @@ class R9K extends global.Discord.Client {
                 delete sets.guildId;
                 entry.settings = sets;
             };
-            Promise.all(promises).then(console.log.bind(null, "r9k online!"));
-
+            Promise.all(promises).then(console.log.bind(null, "r9k online!")).catch(console.error);
+            this.muteCheckInterval = setInterval(this.mute._loop.bind(this.mute), 2000);
             this.user.setActivity(defaultSettings.prefix + 'help | caltrop.dev/signal', {
                 type: 'WATCHING'
             })
@@ -100,61 +86,55 @@ class R9K extends global.Discord.Client {
     }
 
     addGuild(id) {
-        return new Promise((resolve, reject) => {
-            let query = '';
-            //Add guild colums to repetition matrix
-            query += 'ALTER TABLE `messageData` ADD COLUMN `'+id+'` BIT(1) DEFAULT 0 NOT NULL; ALTER TABLE `attributeData` ADD COLUMN `'+id+'` BIT(1) DEFAULT 0 NOT NULL;';
-            //Add settings entry
-            query += `INSERT INTO \`settings\` (\`guildId\`, \`muteOnViolation\`, \`muteDecayTime\`, \`prefix\`) VALUES ('${id}', ${defaultSettings.muteOnViolation}, ${defaultSettings.muteDecayTime}, '${defaultSettings.prefix}');`;
-
-            this.guildInfo[id] = {
-                mutes: Object.create(null),
-                channels: new Set(),
-                settings: Object.assign({}, defaultSettings)
-            }
-            this.sql(query)
-            .then(resolve)
-            .catch(reject);
-        });
+        this.guildInfo[id] = {
+            mutes: Object.create(null),
+            channels: new Set(),
+            settings: Object.assign({}, defaultSettings)
+        };
+        return Promise.all([
+            this.sql.addColumnIfNotExists('messageData', id),
+            this.sql.addColumnIfNotExists('attributeData', id),
+            this.sql.createDefaultSettings(id)
+        ]);
     }
 
     removeGuild(id) {
-        return new Promise((resolve, reject) => {
-            let query = '';
-            //Remove guild colums from repetition matrix
-            query += 'ALTER TABLE `messageData` DROP COLUMN `'+id+'`; ALTER TABLE `attributeData` DROP COLUMN `'+id+'`;';
-            //Remove settings entry
-            query += 'DELETE FROM `settings` WHERE `guildId`='+id+';';
-            //Remove mutes
-            query += 'DELETE FROM `mutes` WHERE `guildId`='+id+';';
-            delete this.guildInfo[id];
-            this.sql(query).then(resolve).catch(reject);
-        });
+        delete this.guildInfo[id];
+        return Promise.all([
+            this.sql.dropColumnIfExists('messageData', id),
+            this.sql.dropColumnIfExists('attributeData', id),
+            this.sql.deleteWhere('settings', 'guildId', id),
+            this.sql.deleteWhere('mutes', 'guildId', id)
+        ]);
     }
 
-    sql(query, escapeArr) {
+    loadDirectory(path, extension) {
+        if(!path.endsWith('/')) path += '/';
         return new Promise((resolve, reject) => {
-            if(!query || !query.length) return reject(new TypeError('No Query specified!'));
-            const opts = {
-                sql: query
-            };
-            if(Array.isArray(escapeArr) && escapeArr.length) opts.values = escapeArr;
-            connection.query(opts, function(err, res, fields) {
+            fs.readdir(path, function(err, files) {
                 if(err) return reject(err);
-                resolve([res, fields]);
+                const fileArr = [];
+                for(let i = 0; i < files.length; ++i) {
+                    const file = files[i];
+                    if(!file.endsWith(extension)) continue;
+                    fileArr.push(require(path + file));
+                    delete require.cache[require.resolve(path + file)];
+                }
+                resolve(fileArr);
             });
-        });
+        })
     }
 
     loadEvents() {
         return new Promise((resolve, reject) => {
-            fs.readdir('./events/', (err, events) => {
-                if (err) return reject(err);
-                for (let i = 0; i < events.length; ++i) {
-                    const ev = require('./events/' + events[i]);
-                    this.on(events[i].split('.js')[0], ev.run);
-                    delete require.cache[require.resolve('./events/' + events[i])];
-                }
+            this.loadDirectory('./events', '.js').then(events => {
+                for(let i = 0; i < events.length; ++i) {
+                    const event = events[i],
+                        oldEvent = this.eventFunctions.get(event.name);
+                    if(oldEvent) this.removeListener(event.name, oldEvent.run);
+                    this.on(event.name, event.run);
+                    this.eventFunctions.set(event.name, event);
+                };
                 resolve(events);
             });
         })
@@ -162,19 +142,27 @@ class R9K extends global.Discord.Client {
 
     loadCommands() {
         return new Promise((resolve, reject) => {
-            fs.readdir('./commands/', (err, cmds) => {
-                if (err) return reject(err);
-                for (let i = 0; i < cmds.length; ++i) {
-                    const cmd = require('./commands/' + cmds[i]);
-                    this.commands.set(cmds[i].split('.js')[0], Object.assign({
+            this.loadDirectory('./commands', 'js').then(commands => {
+                for(let i = 0; i < commands.length; ++i) {
+                    this.commands.set(commands[i].name, Object.assign({
                         cooldown: new Map(),
                         usage: function(guildId) {
                             return 'Usage: `' + (guildId ? client.guildInfo[guildId].settings.prefix : defaultSettings.prefix) + this.name + ' ' + this.args + '`';
                         }
-                    }, cmd));
-                    delete require.cache[require.resolve('./commands/' + cmds[i])];
+                    }, commands[i]));
                 }
-                resolve(cmds);
+                resolve(commands.map(c => c.name));
+            });
+        });
+    }
+
+    loadModules() {
+        return new Promise((resolve, reject) => {
+            this.loadDirectory('./util', 'js').then(modules => {
+                for(let i = 0; i < modules.length; ++i) {
+                    this[modules[i].name] = modules[i];
+                }
+                resolve(modules.map(m => m.name));
             });
         });
     }

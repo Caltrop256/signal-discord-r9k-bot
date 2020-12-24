@@ -1,4 +1,5 @@
 module.exports = {
+    name: 'error',
     handler: function(output, userId, guildId, timestamp, error = {}) {
         console.error(`\x1b[31m[${error.name || 'ERROR'}] \x1b[35m[${new Date(timestamp).toLocaleString()}]\x1b[0m : \x1b[36m"${error.message || 'Poorly structured error'}"\x1b[0m ; list[${client.error.list.length}]`);
         client.error.list.push({userId, guildId, timestamp, error});

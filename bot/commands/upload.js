@@ -25,7 +25,7 @@ module.exports = {
                         const {data} = JSON.parse(res);
                         if(!Array.isArray(data.message) || !Array.isArray(data.attribute)) throw new TypeError('Malformed .r9k file');
                         if(await client.misc.confirm(output, msg.member.id, `Uploading this dataset will completely overwrite the current one. Do you wish to proceed? \n(This action can **not** be undone)`, 'Overwrite dataset?')) {
-                            await client.sql('UPDATE `messageData` SET `'+msg.channel.guild.id+'`=0; UPDATE `attributeData` SET `'+msg.channel.guild.id+'`=0;').catch(handler);
+                            await client.sql.clearDataset(msg.channel.guild.id).catch(handler);
 
                             let query = '';
                             const escape = [];

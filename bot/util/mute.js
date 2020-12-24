@@ -1,4 +1,5 @@
 module.exports = {
+    name: 'mute',
     defaultBaseDurationS: 2,
     MAX_STREAK: 23,
     MAX_MUTE_TIME: Math.pow(2, 32) - 1,
@@ -86,8 +87,7 @@ module.exports = {
             now = new Date(),
             nNow = +now;
 
-        client.sql('INSERT INTO `mutes` (`guildId`, `userId`, `start`, `lastUpdate`, `time`, `streak`) VALUES ("'+guildId+'", "'+userId+'", ?, ?, '+time+', '+streak+') ON DUPLICATE KEY UPDATE `start` = ?, `lastUpdate` = ?, `time` = '+time+', `streak` = '+streak+';', [now, now, now, now])
-        .then(() => {
+        client.sql.updateMuteEntry(guildId, userId, now, now, streak, time).then(() => {
             client.guildInfo[guildId].mutes[userId] = {
                 start: nNow,
                 lastUpdate: nNow,
@@ -145,26 +145,6 @@ module.exports = {
             }
         }
 
-        if(deletes.length) {
-            query += 'DELETE FROM `mutes` WHERE (`guildId`="'+deletes[0][1]+'" AND `userId`="'+deletes[0][0]+'")';
-            if(deletes.length >= 2) {
-                for(let i = 1; i < deletes.length; ++i) {
-                    query += ' OR (`guildId`="'+deletes[i][1]+'" AND `userId`="'+deletes[i][0]+'")';
-                }
-            };
-            query += ';';
-        };
-
-        const escapes = [];
-        for(let i = 0; i < updates.length; ++i) {
-            query += 'UPDATE `mutes` SET `start`=?,`lastUpdate`=?,`time`=?,`streak`='+updates[i].streak+' WHERE `userId`="'+updates[i].userId+'" AND `guildId`="'+updates[i].guildId+'";';
-            const start = updates[i].start ? new Date(updates[i].start) : null,
-                time = updates[i].time || null;
-            escapes.push(start, new Date(updates[i].lastUpdate), time);
-        }
-
-        if(query.length) {
-            client.sql(query, escapes).catch(console.error);
-        }
+        client.sql.updateMuteEntries(updates, deletes);
     }
 }

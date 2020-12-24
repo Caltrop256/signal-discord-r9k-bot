@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS `mutes` (
 
 CREATE TABLE IF NOT EXISTS `channels` (
 	`guildId` VARCHAR(20) NOT NULL,
-    `channelId` VARCHAR(20) NOT NULL
+    `channelId` VARCHAR(20) NOT NULL,
+    PRIMARY KEY (`guildId`, `channelid`)
 );
 
 DROP PROCEDURE IF EXISTS selectAndUpdate;

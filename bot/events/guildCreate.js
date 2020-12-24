@@ -1,6 +1,9 @@
 module.exports = {
+    name: 'guildCreate',
     run: function(guild) {
-        client.addGuild(guild.id).then(async () => {
+        const promise = client.addGuild(guild.id);
+        console.log(promise);
+        promise.then(async () => {
             function isValid(channel) {
                 if(!channel) return false;
                 const perm = channel.permissionsFor(guild.me);
@@ -21,7 +24,7 @@ module.exports = {
                     const embed = client.embed.info('Thank you for adding me to your Guild!\nUse the **&channels** commands to start adding channels to the network! You can find a complete list of commands and further information [here](https://caltrop.dev/signal)!','Signal has been added to your Guild!')
                     channels[i].send(embed);
                     break;
-                }
+                };
             }
         }).catch(console.error);
     }

@@ -1,4 +1,5 @@
 module.exports = {
+    name: 'message',
     run: async function (msg) {
         if(msg.author.id == client.user.id || !msg.guild || msg.type != 'DEFAULT') return;
 
@@ -16,29 +17,17 @@ module.exports = {
                         Date.now(),
                         new TypeError('Compressed data exceeds 2000 char limit!')
                     );
-                    const [rows] = await client.sql(`CALL selectAndUpdate(?,?);`, [comp, msg.channel.guild.id]);
-                    if(!(rows[0][0]['id'] || rows[0][0][msg.channel.guild.id])) {
-                        valid = true;
-                    }
+
+                    const messageIsUnique = await client.sql.checkAndAppendMessageData(msg.channel.guild.id, comp);
+                    if(messageIsUnique) valid = true;
                 }
 
                 if(msg.attachments.size || msg.embeds.length) {
-                    const hashed = await Promise.all([...msg.attachments.map(client.compressData), ...msg.embeds.map(client.compressData)]);
-                    gId = msg.channel.guild.id;
-                    const escape = [];
-                    let query = '';
-                    for(let i = 0; i < hashed.length; ++i) {
-                        escape.push(hashed[i], hashed[i]);
-                        query += 'SELECT * FROM `attributeData` WHERE `hash`=? AND `'+gId+'`=1 LIMIT 1; INSERT INTO `attributeData` (`hash`, `'+gId+'`) VALUES (?, 1) ON DUPLICATE KEY UPDATE `'+gId+'`=1;';
-                    };
+                    const hashed = await Promise.all([...msg.attachments.map(client.compressData), ...msg.embeds.map(client.compressData)]),
+                        gId = msg.channel.guild.id;
 
-                    const [rows] = await client.sql(query, escape);
-                    for(let i = 0; i < rows.length; i += 2) {
-                        if(!rows[i].length || valid) {
-                            valid = true;
-                            break;
-                        }
-                    }
+                    const includesUniqueHash = await client.sql.checkAndAppendAttributeDataArray(gId, hashed);
+                    if(includesUniqueHash) valid = true;
                 }
 
                 if(!valid) {

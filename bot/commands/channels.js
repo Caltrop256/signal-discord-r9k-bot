@@ -29,11 +29,9 @@ module.exports = {
                     for(const userId in client.guildInfo[guild.id].mutes) {
                         client.mute.muteUpdateChannelPerms(userId, guild.id).catch(console.error);
                     }
-                    client.sql('INSERT INTO `channels` (`guildId`, `channelId`) VALUES ("'+guild.id+'", "'+channel.id+'");')
-                    .then(() => {
+                    client.sql.addChannel(guild.id, channel.id).then(() => {
                         output.send(client.embed.success(`The ${channel} channel has been added to the network!`, 'Success!'));
-                    })
-                    .catch(console.error);
+                    }).catch(console.error);
                     break;
                 case 'remove':
                 case 'r':
@@ -55,11 +53,9 @@ module.exports = {
                             if(perm && !perm.allow.bitfield && !perm.deny.bitfield) perm.delete().catch(console.error);
                         }).catch(console.error);
                     }
-                    client.sql('DELETE FROM `channels` WHERE `guildId` = "'+guild.id+'" AND `channelId` = "'+channel.id+'";')
-                    .then(() => {
+                    client.sql.deleteChannel(guild.id, channel.id).then(() => {
                         output.send(client.embed.success(`The ${channel} channel has been removed from the network!`, 'Success!'));
-                    })
-                    .catch(console.error);
+                    }).catch(console.error);
                     break;
                 default :
                     output.send(client.embed.invalid(`Invalid action, use either **add** or **remove**`, 'Invalid arguments', this, msg.channel.guild.id));

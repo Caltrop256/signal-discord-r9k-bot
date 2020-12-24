@@ -21,8 +21,7 @@ module.exports = {
         .then(() => {
             client.mute.muteNotification(member.id, msg.channel.guild.id, newEntry.time);
         }).catch(handler);
-        client.sql('INSERT INTO `mutes` (`guildId`, `userId`, `start`, `lastUpdate`, `time`, `streak`) VALUES ("'+msg.channel.guild.id+'", "'+member.id+'", ?, ?, '+newEntry.time+', '+newEntry.streak+') ON DUPLICATE KEY UPDATE `start` = ?, `lastUpdate` = ?, `time` = '+newEntry.time+', `streak` = '+newEntry.streak+';', [now, now, now, now])
-        .then(() => {
+        client.sql.updateMuteEntry(msg.channel.guild.id, member.id, now, now, newEntry.streak, newEntry.time).then(() => {
             output.send(client.embed.success(`Successfully muted ${member}\n\nThey will be unmuted in **${client.time(newEntry.time)}**!`, 'User muted'));
         }).catch(handler);
     }
