@@ -274,13 +274,14 @@ setInterval(function() {
 
 function handleHash() {
     const hash = window.location.hash.substring(1);
-    if(!hash) return;
-    const el = window.document.getElementById('_' + hash);
-    if(el) el.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-    });
+    if(hash) {
+        const el = window.document.getElementById('_' + hash);
+        if(el) el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
 }
-window.addEventListener('wheel', () => window.location.hash = '');
+window.addEventListener('wheel', () => window.location.hash = '_');
 window.addEventListener('hashchange', handleHash);
 window.setTimeout(handleHash, 10);
