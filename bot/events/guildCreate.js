@@ -2,7 +2,6 @@ module.exports = {
     name: 'guildCreate',
     run: function(guild) {
         const promise = client.addGuild(guild.id);
-        console.log(promise);
         promise.then(async () => {
             function isValid(channel) {
                 if(!channel) return false;
@@ -11,11 +10,11 @@ module.exports = {
             }
 
             const channels = [
-                await client.get.channel('signal'),
-                await client.get.channel('r9k'),
-                await client.get.channel('welcome'), 
-                await client.get.channel('general'), 
-                await client.get.channel('main'),
+                await client.get.channel('signal', guild.id),
+                await client.get.channel('r9k', guild.id),
+                await client.get.channel('welcome', guild.id), 
+                await client.get.channel('general', guild.id), 
+                await client.get.channel('main', guild.id),
                 ...Array.from(guild.channels.cache).map(c => c[1]).filter(c => c.type == 'text').sort((a,b) => a.position - b.position)
             ]
 

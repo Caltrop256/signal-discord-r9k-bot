@@ -18,7 +18,7 @@ module.exports = {
                 case 'a':
                 case 'connect':
                 case 'c':
-                    channel = await client.get.channel(str);
+                    channel = await client.get.channel(str, guild.id);
                     if(!channel) {
                         return output.send(client.embed.invalid(`Couldn't find specified channel!`, 'Invalid Channel', this, msg.channel.guild.id));
                     }
@@ -37,7 +37,7 @@ module.exports = {
                 case 'r':
                 case 'disconnect':
                 case 'd':
-                    channel = await client.get.channel(str);
+                    channel = await client.get.channel(str, guild.id);
                     if(!channel) {
                         return output.send(client.embed.invalid(`Couldn't find specified channel!`, 'Invalid Channel', this, msg.channel.guild.id));
                     }

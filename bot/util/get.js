@@ -2,11 +2,12 @@ const {matchSorter} = require('match-sorter');
 
 module.exports = {
     name: 'get',
-    channel(str) {
+    channel(str, guildId) {
         return new Promise(async r => {
             if (!str || typeof str != 'string') r(undefined);
             const mention = str.match(/^<#!?(\d+)>$/),
-                channels = client.channels.cache.filter(c => c.type == 'text'),
+                guild = client.guilds.cache.get(guildId),
+                channels = guild.channels.cache.filter(c => c.type == 'text'),
                 names = channels.map(c => c.name);
 
             function findHelper(str) {
