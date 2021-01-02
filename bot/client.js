@@ -179,7 +179,7 @@ class R9K extends global.Discord.Client {
                 const str = data.name + '_' + data.size + '_' + String(data.width) + '_' + String(data.height);
                 LZUTF8.compressAsync(str, {}, function(res, err) {
                     if(err) return reject(err);
-                    return resolve(crypto.createHash('sha256').update(res).digest('utf8'))
+                    return resolve(crypto.createHash('sha256').update(res).digest('ascii'));
                 });
             } else if(data instanceof Discord.MessageEmbed) {
                 const str = JSON.stringify({
@@ -189,7 +189,7 @@ class R9K extends global.Discord.Client {
                 });
                 LZUTF8.compressAsync(str, {}, function(res, err) {
                     if(err) return reject(err);
-                    return resolve(crypto.createHash('sha256').update(res).digest('utf8'))
+                    return resolve(crypto.createHash('sha256').update(res).digest('ascii'))
                 });
             } else throw new TypeError('Can not resolve Data Type to compress');
         })

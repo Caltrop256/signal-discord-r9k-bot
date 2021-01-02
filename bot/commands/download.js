@@ -5,7 +5,7 @@ module.exports = {
     aliases: ['dl', 'backup'],
     args: '',
     rate: 20,
-    perms: ['MANAGE_MESSAGES'],
+    perms: [],
 
     run: function(handler, msg, args, output) {
         client.sql.selectGuildMessageData(msg.channel.guild.id).then(([queryResults]) => {
@@ -23,7 +23,7 @@ module.exports = {
 
             const buffer = R9Kodec.toBuffer(json);
 
-            const attachment = new Discord.MessageAttachment(buffer, `${msg.channel.guild.name}_${new Date(now).toLocaleString().split(' ')[0]}.r9k`);
+            const attachment = new Discord.MessageAttachment(buffer, `${msg.channel.guild.name}_${new Date(now).toISOString().substring(10)}.r9k`);
             output.send({
                 embed: client.embed.success('Successfully encoded your dataset!\nDownload the attached file and use it with the upload command to enable it!'),
                 files: [attachment]

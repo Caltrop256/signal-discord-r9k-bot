@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `messageData` (
 );
 
 CREATE TABLE IF NOT EXISTS `attributeData` (
-    `hash` CHAR(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `hash` CHAR(32) CHARACTER SET ascii NOT NULL,
     PRIMARY KEY (`hash`)
 );
 

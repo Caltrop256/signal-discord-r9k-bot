@@ -3,6 +3,8 @@ module.exports = {
     run: async function(old, msg) {
         if(msg.author.bot || !msg.guild || msg.type != 'DEFAULT' || old.content == msg.content) return;
         if(client.guildInfo[msg.channel.guild.id].channels.has(msg.channel.id)) {
+            if(msg.attachments.size || msg.embeds.length) return;
+            if(msg.content.replace(client.misc.punctuationRegex, '') == old.content.replace(client.misc.punctuationRegex, '')) return;
             try {
                 let valid = false;
     
