@@ -204,7 +204,7 @@ void FromBuffer(const FunctionCallbackInfo<Value>& args)
     constexpr uint64_t minimumSize = sizeof(magicNumber) + sizeof(OutputData::timestamp) + sizeof(OutputData::guildID) + sizeof(OutputData::requestedBy) + sizeof(OutputData::messageArrLength) + sizeof(OutputData::attributeArrLength);
     if (bufferSize < minimumSize)
         throwError(RangeError, "File doesn't match minimum file size requirement");
-    if (!CanAllocate(bufferSize))
+    if (!CanAllocate(bufferSize*2))
         throwError(Error, "Not enough memory to copy data");
 
     char* bufferData = node::Buffer::Data(arg);
@@ -296,6 +296,24 @@ void FromBuffer(const FunctionCallbackInfo<Value>& args)
     
     args.GetReturnValue().Set(toReturn);
 }
+void AllocThreshold(const FunctionCallbackInfo<Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+
+    if (args.Length() == 0)
+        return args.GetReturnValue().Set(Number::New(isolate,allocThresholdMB));
+    if (args.Length() > 1)
+        throwError(Error, "Expecting 0 or 1 arguments, got multiple");
+    const Local<Value>& arg = args[0];
+    if (!arg->IsNumber())
+        throwError(TypeError, "Argument must be of type 'Number'");
+	double temp = arg.As<Number>()->Value();
+	uint64_t temp2 = temp;
+	if(temp != temp2)
+		return args.GetReturnValue().Set(False(isolate));
+	allocThresholdMB = temp;
+	args.GetReturnValue().Set(True(isolate));
+}
 //#include "../node_modules/nan/nan.h"
 #define CREATE_FUNCTION(funcName,handleName) \
     Local<String> handleName ## Key = CreateString(isolate, #handleName, &fatal); \
@@ -313,8 +331,10 @@ void Init(Local<Object> exports) {
     bool fatal = false;
     CREATE_FUNCTION(ToBuffer, toBuffer);
     CREATE_FUNCTION(FromBuffer, fromBuffer);
+    CREATE_FUNCTION(AllocThreshold, allocThreshold);
     exports->Set(context,toBufferKey,toBuffer);
     exports->Set(context, fromBufferKey, fromBuffer);
+    exports->Set(context, allocThresholdKey, allocThreshold);
 
 }
 

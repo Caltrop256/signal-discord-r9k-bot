@@ -15,8 +15,9 @@
 #endif
 
 using namespace v8;
+static uint64_t allocThresholdMB = 50;
 //i have no legitimate reason for doing this other than i think user defined operators are cool .w.
-constexpr uint64_t operator "" _MB(uint64_t size) noexcept
+constexpr unsigned long long int operator "" MB(unsigned long long int size) noexcept
 {
     return size * 1048576;
 }
@@ -26,11 +27,11 @@ bool CanAllocate(uint64_t toAllocate)
     /**/ MEMORYSTATUSEX statex{ 0 };
     /**/statex.dwLength = sizeof(statex);
     /**/GlobalMemoryStatusEx(&statex);
-    /**/return statex.ullAvailPageFile > toAllocate + 250_MB; //immagine having less than 250 mb on your system
+    /**/return statex.ullAvailPageFile > toAllocate + allocThresholdMB * 1MB; //immagine having less than 250 mb on your system
     #elif defined(__linux__)
     /**/uint64_t avPages = sysconf(_SC_AVPHYS_PAGES);
     /**/uint64_t pageSize = sysconf(_SC_PAGESIZE);
-    /**/return (avPages * pageSize) > toAllocate + 250_MB; //that's hella cringe bro
+    /**/return (avPages * pageSize) > toAllocate + allocThresholdMB * 1MB; //that's hella cringe bro
     #else
     /**/static_assert("UNSUPPORTED OS"); //Piss off macOS, lol.
     #endif
