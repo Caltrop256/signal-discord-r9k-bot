@@ -244,6 +244,12 @@ const commands = [
         ]
     },
     {
+        name: 'toggledms',
+        aliases: ['toggledm'],
+        description: 'Allows you to opt-out of the bot DMing you when you get muted.',
+        examples: []
+    },
+    {
         name: 'unmute',
         aliases: ['pardon'],
         description: 'Removes a previously applied mute from a user.',

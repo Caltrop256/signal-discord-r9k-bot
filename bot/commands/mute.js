@@ -19,7 +19,7 @@ module.exports = {
         client.guildInfo[msg.channel.guild.id].mutes[member.id] = Object.assign({}, newEntry);
         client.mute.muteUpdateChannelPerms(member.id, msg.channel.guild.id)
         .then(() => {
-            client.mute.muteNotification(member.id, msg.channel.guild.id, newEntry.time);
+            client.mute.muteNotification(member.id, msg.channel.guild.id, newEntry.time, msg.author.id);
         }).catch(handler);
         client.sql.updateMuteEntry(msg.channel.guild.id, member.id, now, now, newEntry.streak, newEntry.time).then(() => {
             output.send(client.embed.success(`Successfully muted ${member}\n\nThey will be unmuted in **${client.time(newEntry.time)}**!`, 'User muted'));

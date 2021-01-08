@@ -44,6 +44,10 @@ module.exports = Object.assign(sql, {
         return this.query(query, [condition]);
     },
 
+    addOptOutEntry(id) {
+        return this.query('INSERT INTO `dontDM` (`userId`) VALUES ("'+id+'")');
+    },
+
     deleteWhere(table, column, condition) {
         return this.query('DELETE FROM `'+table+'` WHERE `'+column+'`='+condition+';');
     },

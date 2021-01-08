@@ -51,27 +51,31 @@ module.exports = {
         });
     },
 
-    unmuteNotification: function(userId, guildId) {
+    unmuteNotification: function(userId, guildId, applyId) {
         return new Promise(async (resolve, reject) => {
+            if(client.ignoredUsers.has(userId)) return resolve(void 0);
             const channels = Array.from(client.guildInfo[guildId].channels),
                 guild = client.guilds.cache.get(guildId)
                 member = await guild.members.fetch(userId),
+                applying = applyId ? await guild.members.fetch(applyId) : null,
                 channelStr = client.misc.endListWithAnd(channels.map(c => '<#' + c + '>'));
 
-            member.send(client.embed.info(`You have been unmuted from **${guild.name}** and can now use the ${channelStr} channel${channels.length == 1 ? '' : 's'} again!`, 'Automatically unmuted'))
+            member.send(client.embed.info(`You have been unmuted from **${guild.name}**${applying ? ` by ${applying}` : ''} and can now use the ${channelStr} channel${channels.length == 1 ? '' : 's'} again!`, (applying ? 'Manually' : 'Automatically') + ' unmuted'))
             .then(resolve)
             .catch(() => {}); // User has DMs disabled
         });
     },
 
-    muteNotification: function(userId, guildId, len) {
+    muteNotification: function(userId, guildId, len, applyId) {
         return new Promise(async (resolve, reject) => {
+            if(client.ignoredUsers.has(userId)) return resolve(void 0);
             const channels = Array.from(client.guildInfo[guildId].channels),
                 guild = client.guilds.cache.get(guildId)
                 member = await guild.members.fetch(userId),
+                applying = applyId ? await guild.members.fetch(applyId) : null,
                 channelStr = client.misc.endListWithAnd(channels.map(c => '<#' + c + '>'));
 
-            member.send(client.embed.info(`You have been muted in **${guild.name}** from the ${channelStr} channel${channels.length == 1 ? '' : 's'} for repeating a phrase!\n\nYour mute will expire in **${client.time(len)}**!`, 'Automatically muted'))
+            member.send(client.embed.info(`You have been muted${applying ? ` by ${applying}` : ''} in **${guild.name}** from the ${channelStr} channel${channels.length == 1 ? '' : 's'} for repeating a phrase!\n\nYour mute will expire in **${client.time(len)}**!`, (applying ? 'Manually' : 'Automatically') +  ' muted'))
             .then(resolve)
             .catch(() => {}); // User has DMs disabled
     

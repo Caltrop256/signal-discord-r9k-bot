@@ -7,6 +7,10 @@ CREATE TABLE IF NOT EXISTS `attributeData` (
     PRIMARY KEY (`hash`)
 );
 
+CREATE TABLE IF NOT EXISTS `dontDM` (
+    `userId` VARCHAR(20) NOT NULL
+)
+
 CREATE TABLE IF NOT EXISTS `settings` (
     `guildId` VARCHAR(20) NOT NULL,
     `muteOnViolation` BOOLEAN NOT NULL DEFAULT 1,

@@ -18,7 +18,7 @@ module.exports = {
         }
         client.mute.unmuteUpdateChannelPerms(member.id, msg.channel.guild.id)
         .then(() => {
-            client.mute.unmuteNotification(member.id, msg.channel.guild.id);
+            client.mute.unmuteNotification(member.id, msg.channel.guild.id, msg.member.id);
         }).catch(handler);
         client.sql.updateMuteEntry(msg.channel.guild.id, member.id, null, entry.lastUpdate, entry.streak, null).then(() => {
             output.send(client.embed.success(`Successfully unmuted ${member}!`, 'Unmuted Member'));

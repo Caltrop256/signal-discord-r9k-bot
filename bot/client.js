@@ -21,6 +21,7 @@ class R9K extends global.Discord.Client {
         ].map(a => new Discord.MessageAttachment(fs.readFileSync('./assets/signal_' + a + '.png'), 'thumbnail.png'));
 
         this.guildInfo = Object.create(null);
+        this.ignoredUsers = new Set();
 
         this.developers = config.developers;
 
@@ -50,10 +51,11 @@ class R9K extends global.Discord.Client {
                 }
             });
 
-            const [chRows, mutes, settings] = (await Promise.all([
+            const [chRows, mutes, settings, dontDM] = (await Promise.all([
                 client.sql.select('channels'),
                 client.sql.select('mutes'),
-                client.sql.select('settings')
+                client.sql.select('settings'),
+                client.sql.select('dontDM')
             ])).map(r => r[0]);
 
             for(let i = 0; i < chRows.length; ++i) {
@@ -77,6 +79,9 @@ class R9K extends global.Discord.Client {
                 delete sets.guildId;
                 entry.settings = sets;
             };
+            for(let i = 0; i < dontDM.length; ++i) {
+                this.ignoredUsers.add(dontDM[i].userId);
+            }
             Promise.all(promises).then(console.log.bind(null, "r9k online!")).catch(console.error);
             this.muteCheckInterval = setInterval(this.mute._loop.bind(this.mute), 2000);
             this.user.setActivity(defaultSettings.prefix + 'help | caltrop.dev/signal', {
