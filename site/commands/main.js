@@ -99,7 +99,7 @@ class CommandListing {
         title.innerHTML = opts.name;
         title.onclick = () => window.location.hash = opts.name;
         aliases.classList.add('aliases');
-        textbox.classList.add('textbox');
+        textbox.classList.add('textbox', 'unselectable');
         button.classList.add('button');
         codeButton.classList.add('source');
         codeButton.onclick = () => window.location.href = 'https://github.com/Caltrop256/signal-discord-r9k-bot/blob/main/bot/commands/'+opts.name+'.js'
