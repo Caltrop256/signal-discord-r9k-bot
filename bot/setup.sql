@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `attributeData` (
 
 CREATE TABLE IF NOT EXISTS `dontDM` (
     `userId` VARCHAR(20) NOT NULL
-)
+);
 
 CREATE TABLE IF NOT EXISTS `settings` (
     `guildId` VARCHAR(20) NOT NULL,
